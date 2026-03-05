@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -12,15 +13,8 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
+import { Heart, Camera, Briefcase, Star, Send, CalendarIcon } from "lucide-react";
 import { toast } from "sonner";
-import { CalendarIcon, Send } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
@@ -55,10 +49,42 @@ const Contact = () => {
         },
     });
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values);
-        toast.success("Message sent successfully! We'll get back to you soon.");
-        form.reset();
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+        setIsSubmitting(true);
+        try {
+            const formData = new FormData();
+            formData.append("access_key", "a8f62ddb-b42d-40de-997a-9536fb0af107");
+            formData.append("name", values.name);
+            formData.append("email", values.email);
+            formData.append("phone", values.phone);
+            formData.append("eventType", values.eventType);
+            formData.append("date", format(values.date, "PPP"));
+            formData.append("message", values.message);
+            // Optional: Send this to a specific subject
+            formData.append("subject", `New Booking Inquiry from ${values.name} (${values.eventType})`);
+
+            const response = await fetch("https://api.web3forms.com/submit", {
+                method: "POST",
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                toast.success("Message sent successfully! We'll get back to you soon.");
+                form.reset();
+            } else {
+                console.error("Web3Forms error:", data);
+                toast.error("Failed to send message. Please try again later.");
+            }
+        } catch (error) {
+            console.error("Submission error:", error);
+            toast.error("An error occurred. Please try again later.");
+        } finally {
+            setIsSubmitting(false);
+        }
     }
 
     return (
@@ -137,7 +163,7 @@ const Contact = () => {
                                     />
                                 </div>
 
-                                <div className="grid md:grid-cols-2 gap-8">
+                                <div className="grid gap-8">
                                     <FormField
                                         control={form.control}
                                         name="phone"
@@ -151,37 +177,60 @@ const Contact = () => {
                                             </FormItem>
                                         )}
                                     />
-                                    <FormField
-                                        control={form.control}
-                                        name="eventType"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>Event Type</FormLabel>
-                                                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                                    <FormControl>
-                                                        <SelectTrigger>
-                                                            <SelectValue placeholder="Select event type" />
-                                                        </SelectTrigger>
-                                                    </FormControl>
-                                                    <SelectContent>
-                                                        <SelectItem value="wedding">Wedding</SelectItem>
-                                                        <SelectItem value="engagement">Engagement</SelectItem>
-                                                        <SelectItem value="portrait">Portrait Session</SelectItem>
-                                                        <SelectItem value="event">Corporate Event</SelectItem>
-                                                        <SelectItem value="other">Other</SelectItem>
-                                                    </SelectContent>
-                                                </Select>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
                                 </div>
+
+                                <FormField
+                                    control={form.control}
+                                    name="eventType"
+                                    render={({ field }) => (
+                                        <FormItem className="space-y-4">
+                                            <FormLabel className="text-base text-foreground">What are we celebrating?</FormLabel>
+                                            <FormControl>
+                                                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                                    {[
+                                                        { id: "wedding", label: "Wedding", icon: Heart },
+                                                        { id: "portrait", label: "Portrait", icon: Camera },
+                                                        { id: "event", label: "Event", icon: Briefcase },
+                                                        { id: "other", label: "Other", icon: Star }
+                                                    ].map((item) => (
+                                                        <div
+                                                            key={item.id}
+                                                            onClick={() => field.onChange(item.id)}
+                                                            className={cn(
+                                                                "group cursor-pointer rounded-2xl border-2 p-4 flex flex-col items-center justify-center gap-3 transition-all duration-300",
+                                                                field.value === item.id
+                                                                    ? "border-accent bg-accent/10 shadow-md shadow-accent/20"
+                                                                    : "border-border/50 bg-card hover:border-accent/40 hover:bg-accent/5 hover:shadow-sm"
+                                                            )}
+                                                        >
+                                                            <div className={cn(
+                                                                "p-3 rounded-full transition-colors duration-300",
+                                                                field.value === item.id
+                                                                    ? "bg-accent/20 text-accent"
+                                                                    : "bg-muted text-muted-foreground group-hover:bg-accent/10 group-hover:text-accent/70"
+                                                            )}>
+                                                                <item.icon className="w-6 h-6" />
+                                                            </div>
+                                                            <span className={cn(
+                                                                "text-sm font-medium transition-colors",
+                                                                field.value === item.id ? "text-accent font-bold" : "text-muted-foreground"
+                                                            )}>
+                                                                {item.label}
+                                                            </span>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
 
                                 <FormField
                                     control={form.control}
                                     name="date"
                                     render={({ field }) => (
-                                        <FormItem className="flex flex-col">
+                                        <FormItem className="flex flex-col mb-4">
                                             <FormLabel>Event Date</FormLabel>
                                             <Popover>
                                                 <PopoverTrigger asChild>
@@ -238,12 +287,12 @@ const Contact = () => {
                                 />
 
                                 <motion.div
-                                    whileHover={{ scale: 1.02 }}
-                                    whileTap={{ scale: 0.98 }}
+                                    whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
+                                    whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
                                 >
-                                    <Button type="submit" className="w-full md:w-auto min-w-[200px]">
-                                        Send Message
-                                        <Send className="w-4 h-4 ml-2" />
+                                    <Button type="submit" className="w-full md:w-auto min-w-[200px]" disabled={isSubmitting}>
+                                        {isSubmitting ? "Sending..." : "Send Message"}
+                                        {!isSubmitting && <Send className="w-4 h-4 ml-2" />}
                                     </Button>
                                 </motion.div>
                             </form>

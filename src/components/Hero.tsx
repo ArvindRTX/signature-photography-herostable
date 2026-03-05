@@ -1,49 +1,47 @@
 import { Button } from "@/components/ui/button";
 import { Camera, Play, ArrowRight } from "lucide-react";
 import HeroBackgroundImage from '../assets/images/DSC02445.jpg';
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 
 const Hero = () => {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end start"],
+  });
+
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+  const textY = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section ref={ref} className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background with gradient overlay */}
-      <div className="absolute inset-0 hero-gradient">
+      <div className="absolute inset-0 hero-gradient overflow-hidden">
         <motion.div
           initial={{ scale: 1.1, opacity: 0 }}
           animate={{ scale: 1, opacity: 0.2 }}
           transition={{ duration: 1.5 }}
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          className="absolute inset-x-0 top-[-20%] bottom-[-20%] bg-cover bg-center bg-no-repeat"
           style={{
             backgroundImage: `url(${HeroBackgroundImage})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center ',
             backgroundRepeat: 'no-repeat',
-            height: '100vh',
-            color: 'white'
+            y: backgroundY
           }}
         />
       </div>
 
       {/* Floating elements for visual interest */}
-      <motion.div
-        animate={{
-          y: [0, -20, 0],
-          rotate: [0, 10, 0]
-        }}
-        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-20 left-20 w-20 h-20 border border-accent/30 rounded-full hidden lg:block"
-      />
-      <motion.div
-        animate={{
-          scale: [1, 1.2, 1],
-          opacity: [0.3, 0.6, 0.3]
-        }}
-        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute bottom-32 right-32 w-32 h-32 bg-accent/10 rounded-full blur-xl hidden lg:block"
+      <div className="absolute top-20 left-20 w-20 h-20 border border-accent/30 rounded-full hidden lg:block animate-float" style={{ animationDuration: '5s' }} />
+      <div
+        className="absolute bottom-32 right-32 w-32 h-32 bg-accent/10 rounded-full blur-xl hidden lg:block animate-float"
+        style={{ animationDelay: '2s', animationDuration: '7s' }}
       />
 
       {/* Main content */}
-      <div className="relative z-10 container mx-auto px-4 text-center">
+      <motion.div style={{ y: textY }} className="relative z-10 container mx-auto px-4 text-center">
         <div className="max-w-4xl mx-auto">
           {/* Badge */}
           <motion.div
@@ -133,7 +131,7 @@ const Hero = () => {
             </div>
           </motion.div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Scroll indicator */}
       <motion.div

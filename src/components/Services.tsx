@@ -49,15 +49,10 @@ const Services = () => {
   return (
     <section id="services" className="py-24 bg-background/50 backdrop-blur-sm relative overflow-hidden">
       {/* Decorative elements */}
-      <motion.div
-        animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3] }}
-        transition={{ duration: 8, repeat: Infinity }}
-        className="absolute top-10 right-10 w-40 h-40 bg-accent/5 rounded-full blur-3xl"
-      />
-      <motion.div
-        animate={{ scale: [1, 1.5, 1], opacity: [0.2, 0.5, 0.2] }}
-        transition={{ duration: 10, repeat: Infinity, delay: 1 }}
-        className="absolute bottom-20 left-20 w-60 h-60 bg-primary/5 rounded-full blur-3xl"
+      <div className="absolute top-10 right-10 w-40 h-40 bg-accent/5 rounded-full blur-3xl animate-float" style={{ animationDuration: '8s' }} />
+      <div
+        className="absolute bottom-20 left-20 w-60 h-60 bg-primary/5 rounded-full blur-3xl animate-float"
+        style={{ animationDelay: '1s', animationDuration: '10s' }}
       />
 
       <div className="container mx-auto px-4 relative z-10">

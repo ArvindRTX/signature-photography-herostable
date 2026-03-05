@@ -1,12 +1,12 @@
 import { Badge } from "@/components/ui/badge";
 import { Eye, Heart } from "lucide-react";
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useState, useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 
 const featuredImages = [
   {
     id: 1,
-    image: "https://unsplash.com/photos/two-gold-wedding-rings-on-a-white-background-WHUG4KXCbuI?q=80&w=800&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=800&auto=format&fit=crop",
     title: "Elegant Wedding",
     category: "Wedding",
     likes: 124,
@@ -50,12 +50,30 @@ const featuredImages = [
 
 const FeaturedWork = () => {
   const [hoveredItem, setHoveredItem] = useState<number | null>(null);
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  });
+
+  const titleY = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
 
   return (
-    <section id="portfolio" className="py-24 bg-background/50 backdrop-blur-sm">
-      <div className="container mx-auto px-4">
+    <section id="portfolio" ref={containerRef} className="py-24 bg-background/50 backdrop-blur-sm relative overflow-hidden">
+      {/* Decorative Parallax Background Element */}
+      <motion.div
+        className="absolute -right-64 top-1/4 w-[500px] h-[500px] bg-accent/5 rounded-full blur-[100px] pointer-events-none"
+        style={{ y: useTransform(scrollYProgress, [0, 1], ["-50%", "100%"]) }}
+      />
+      <motion.div
+        className="absolute -left-32 bottom-1/4 w-[300px] h-[300px] bg-primary/10 rounded-full blur-[80px] pointer-events-none"
+        style={{ y: useTransform(scrollYProgress, [0, 1], ["100%", "-50%"]) }}
+      />
+
+      <div className="container mx-auto px-4 relative z-10">
         {/* Section Header */}
         <motion.div
+          style={{ y: titleY }}
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -79,7 +97,7 @@ const FeaturedWork = () => {
         </motion.div>
 
         {/* Featured Gallery Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+        <div className="columns-1 md:columns-2 lg:columns-3 gap-8 mb-12 space-y-8">
           {featuredImages.map((item, index) => (
             <motion.div
               key={item.id}
@@ -87,7 +105,8 @@ const FeaturedWork = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1, duration: 0.5 }}
-              className="group relative aspect-[4/5] overflow-hidden rounded-2xl cursor-pointer elegant-shadow"
+              className={`group relative overflow-hidden rounded-2xl cursor-pointer elegant-shadow break-inside-avoid w-full ${index % 3 === 0 ? 'aspect-[3/4]' : index % 3 === 1 ? 'aspect-[4/5]' : 'aspect-[4/3]'
+                }`}
               onMouseEnter={() => setHoveredItem(item.id)}
               onMouseLeave={() => setHoveredItem(null)}
             >
@@ -95,29 +114,32 @@ const FeaturedWork = () => {
                 src={item.image}
                 alt={item.title}
                 className="w-full h-full object-cover"
+                loading="lazy"
                 whileHover={{ scale: 1.1 }}
                 transition={{ duration: 0.6 }}
               />
 
               {/* Overlay */}
-              <div className={`absolute inset-0 bg-gradient-to-t from-primary/90 via-transparent to-transparent transition-opacity duration-500 ${hoveredItem === item.id ? 'opacity-100' : 'opacity-0'
+              <div className={`absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent transition-opacity duration-500 ${hoveredItem === item.id ? 'opacity-100' : 'opacity-0'
                 }`}>
-                <div className="absolute bottom-0 left-0 right-0 p-6">
-                  <Badge className="mb-3 bg-accent/20 text-accent border-accent/30">
-                    {item.category}
-                  </Badge>
-                  <h3 className="text-white font-serif text-xl font-bold mb-2">
-                    {item.title}
-                  </h3>
-                  <div className="flex items-center gap-2 text-white/80">
-                    <Heart className="w-4 h-4" />
-                    <span className="text-sm">{item.likes} likes</span>
+                <div className="absolute bottom-0 left-0 right-0 p-6 flex flex-col justify-end h-full">
+                  <div className="translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                    <Badge className="mb-3 bg-accent/20 text-accent border-accent/30 backdrop-blur-md">
+                      {item.category}
+                    </Badge>
+                    <h3 className="text-white font-serif text-xl font-bold mb-2">
+                      {item.title}
+                    </h3>
+                    <div className="flex items-center gap-2 text-white/80">
+                      <Heart className="w-4 h-4" />
+                      <span className="text-sm">{item.likes} likes</span>
+                    </div>
                   </div>
                 </div>
               </div>
 
               {/* View Icon */}
-              <div className={`absolute top-4 right-4 w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center transition-all duration-300 ${hoveredItem === item.id ? 'opacity-100 scale-100' : 'opacity-0 scale-50'
+              <div className={`absolute top-4 right-4 w-10 h-10 bg-black/20 backdrop-blur-md rounded-full flex items-center justify-center transition-all duration-300 ${hoveredItem === item.id ? 'opacity-100 scale-100' : 'opacity-0 scale-50'
                 }`}>
                 <Eye className="w-5 h-5 text-white" />
               </div>

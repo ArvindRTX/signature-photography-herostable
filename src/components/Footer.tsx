@@ -1,4 +1,5 @@
 import { Camera, Instagram, Facebook, Twitter, Mail, Phone, MapPin } from "lucide-react";
+import { toast } from "sonner";
 
 const Footer = () => {
   const scrollToSection = (sectionId: string) => {
@@ -28,7 +29,7 @@ const Footer = () => {
             {/* Social Media Links */}
             <div className="flex gap-4">
               <a
-                href="https://instagram.com"
+                href="https://www.instagram.com/signature.photograph?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-accent hover:text-primary smooth-transition"
@@ -101,6 +102,10 @@ const Footer = () => {
                 <Mail className="w-4 h-4 text-accent" />
                 <a
                   href="mailto:aravinthramesh627@gmail.com"
+                  onClick={() => {
+                    navigator.clipboard.writeText('aravinthramesh627@gmail.com');
+                    toast.success('Email address copied to clipboard');
+                  }}
                   className="text-white/80 hover:text-accent smooth-transition"
                 >
                   aravinthramesh627@gmail.com
@@ -109,10 +114,14 @@ const Footer = () => {
               <li className="flex items-center gap-3">
                 <Phone className="w-4 h-4 text-accent" />
                 <a
-                  href="tel:+918438650107"
+                  href="tel:+919952393905"
+                  onClick={() => {
+                    navigator.clipboard.writeText('+91 9952393905');
+                    toast.success('Phone number copied to clipboard');
+                  }}
                   className="text-white/80 hover:text-accent smooth-transition"
                 >
-                  8438650107
+                  9952393905
                 </a>
               </li>
               <li className="flex items-start gap-3">

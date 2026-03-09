@@ -6,6 +6,7 @@ import FeaturedWork from "../components/FeaturedWork";
 import About from "../components/About";
 import Process from "../components/Process";
 import Testimonials from "../components/Testimonials";
+import FAQ from "../components/FAQ";
 import Contact from "../components/Contact";
 import Footer from "../components/Footer";
 import FloatingShapes from "../components/FloatingShapes";
@@ -36,6 +37,34 @@ const Index = () => {
         <meta property="twitter:title" content="Signature Photography | Wedding & Portrait Photographer" />
         <meta property="twitter:description" content="Professional wedding and portrait photography capturing life's most precious moments with artistic vision." />
         <meta property="twitter:image" content="https://images.unsplash.com/photo-1554048612-b6a836894cde?q=80&w=1200&auto=format&fit=crop" />
+
+        <script type="application/ld+json">
+          {`
+            {
+              "@context": "https://schema.org",
+              "@type": "LocalBusiness",
+              "name": "Signature Photography",
+              "image": "https://images.unsplash.com/photo-1554048612-b6a836894cde?q=80&w=1200&auto=format&fit=crop",
+              "@id": "https://signaturephotography.com/",
+              "url": "https://signaturephotography.com/",
+              "telephone": "+919952393905",
+              "email": "aravinthramesh627@gmail.com",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Tenkasi",
+                "addressLocality": "Tenkasi",
+                "addressRegion": "Tamil Nadu",
+                "addressCountry": "IN"
+              },
+              "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": 8.9592,
+                "longitude": 77.3060
+              },
+              "priceRange": "$$"
+            }
+          `}
+        </script>
       </Helmet>
       <FloatingShapes />
       <Navigation />
@@ -45,6 +74,7 @@ const Index = () => {
       <About />
       <Process />
       <Testimonials />
+      <FAQ />
       <Contact />
       <Footer />
       <FloatingPhoneButton />

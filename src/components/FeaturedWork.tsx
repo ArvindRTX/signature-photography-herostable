@@ -2,6 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Eye, Heart } from "lucide-react";
 import { useState, useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
+import Lightbox from "./Lightbox";
 
 const featuredImages = [
   {
@@ -50,6 +51,8 @@ const featuredImages = [
 
 const FeaturedWork = () => {
   const [hoveredItem, setHoveredItem] = useState<number | null>(null);
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
+
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -109,6 +112,7 @@ const FeaturedWork = () => {
                 }`}
               onMouseEnter={() => setHoveredItem(item.id)}
               onMouseLeave={() => setHoveredItem(null)}
+              onClick={() => setSelectedImageIndex(index)}
             >
               <motion.img
                 src={item.image}
@@ -168,7 +172,17 @@ const FeaturedWork = () => {
           </motion.button>
         </motion.div>
       </div>
-    </section>
+
+      {
+        selectedImageIndex !== null && (
+          <Lightbox
+            images={featuredImages}
+            initialIndex={selectedImageIndex}
+            onClose={() => setSelectedImageIndex(null)}
+          />
+        )
+      }
+    </section >
   );
 };
 

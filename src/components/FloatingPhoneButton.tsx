@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Phone } from "lucide-react";
+import { toast } from "sonner";
 
 const FloatingPhoneButton = () => {
     return (
@@ -15,9 +16,13 @@ const FloatingPhoneButton = () => {
             className="fixed bottom-6 right-6 z-50 md:bottom-10 md:right-10"
         >
             <a
-                href="tel:+918438650107"
+                href="tel:+919952393905"
+                onClick={() => {
+                    navigator.clipboard.writeText('+91 9952393905');
+                    toast.success('Phone number copied to clipboard');
+                }}
                 className="flex items-center justify-center w-14 h-14 md:w-16 md:h-16 bg-accent hover:bg-accent/90 text-accent-foreground rounded-full shadow-lg shadow-accent/40 group relative hover:scale-110 active:scale-95 transition-all duration-300"
-                aria-label="Call +91 8438650107"
+                aria-label="Call +91 9952393905"
             >
                 <Phone className="w-6 h-6 md:w-7 md:h-7" />
 
@@ -27,7 +32,7 @@ const FloatingPhoneButton = () => {
 
                 {/* Tooltip text for desktop */}
                 <span className="hidden md:block absolute right-full mr-4 bg-background border border-border px-3 py-1.5 rounded-lg text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none w-max elegant-shadow text-foreground whitespace-nowrap">
-                    Call +91 8438650107
+                    Call +91 9952393905
                     <span className="absolute top-1/2 -right-1 w-2 h-2 bg-background border-r border-t border-border transform rotate-45 -translate-y-1/2"></span>
                 </span>
             </a>

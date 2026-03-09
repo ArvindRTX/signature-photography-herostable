@@ -1,12 +1,25 @@
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { Camera, Heart, Award } from "lucide-react";
 import AboutImage from '../assets/images/DSC02445.jpg';
 
 const About = () => {
+    const containerRef = useRef<HTMLElement>(null);
+    const { scrollYProgress } = useScroll({
+        target: containerRef,
+        offset: ["start end", "end start"]
+    });
+
+    const imageY = useTransform(scrollYProgress, [0, 1], ["-10%", "10%"]);
+    const textY = useTransform(scrollYProgress, [0, 1], ["10%", "-10%"]);
+
     return (
-        <section id="about" className="py-24 bg-background relative overflow-hidden">
+        <section id="about" ref={containerRef} className="py-24 bg-background relative overflow-hidden">
             {/* Decorative Blob */}
-            <div className="absolute top-0 right-0 w-1/2 h-full bg-accent/5 rounded-l-full blur-3xl -z-10 transform translate-x-1/3" />
+            <motion.div
+                className="absolute top-0 right-0 w-1/2 h-full bg-accent/5 rounded-l-full blur-3xl -z-10 transform translate-x-1/3"
+                style={{ y: textY }}
+            />
 
             <div className="container mx-auto px-4">
                 <div className="grid lg:grid-cols-2 gap-16 items-center">
@@ -17,6 +30,7 @@ const About = () => {
                         viewport={{ once: true }}
                         transition={{ duration: 0.8 }}
                         className="relative"
+                        style={{ y: imageY }}
                     >
                         <div className="relative aspect-[4/5] rounded-3xl overflow-hidden elegant-shadow z-10">
                             <img

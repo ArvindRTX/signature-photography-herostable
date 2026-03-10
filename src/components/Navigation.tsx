@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ExternalLink, Menu, X } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
+import MagneticButton from "./ui/MagneticButton";
 
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -58,21 +59,23 @@ const Navigation = () => {
 
             {/* Client Login Button (Desktop) */}
             <div className="hidden md:block flex-shrink-0">
-              <Button
-                variant="outline"
-                className="border-white/30 bg-transparent text-white hover:bg-white/10 hover:border-accent"
-                asChild
-              >
-                <a
-                  href="https://signature-photography-photo-selector.onrender.com/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2"
+              <MagneticButton>
+                <Button
+                  variant="outline"
+                  className="border-white/30 bg-transparent text-white hover:bg-white/10 hover:border-accent"
+                  asChild
                 >
-                  Client Login
-                  <ExternalLink className="w-4 h-4" />
-                </a>
-              </Button>
+                  <a
+                    href="https://signature-photography-photo-selector.onrender.com/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2"
+                  >
+                    Client Login
+                    <ExternalLink className="w-4 h-4" />
+                  </a>
+                </Button>
+              </MagneticButton>
             </div>
 
             {/* Mobile Menu Button */}

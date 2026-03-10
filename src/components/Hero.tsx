@@ -3,6 +3,7 @@ import { Camera, Play, ArrowRight } from "lucide-react";
 import HeroBackgroundImage from '../assets/images/DSC02445.jpg';
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
+import MagneticButton from "./ui/MagneticButton";
 
 const Hero = () => {
   const ref = useRef(null);
@@ -90,24 +91,28 @@ const Hero = () => {
             transition={{ delay: 0.8, duration: 0.8 }}
             className="flex flex-col sm:flex-row gap-4 justify-center"
           >
-            <Button
-              size="lg"
-              className="group bg-accent hover:bg-accent/90 text-accent-foreground font-medium px-8 py-4 h-auto elegant-shadow smooth-transition"
-              onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-            >
-              Book a Consultation
-              <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 smooth-transition" />
-            </Button>
+            <MagneticButton intensity={0.6}>
+              <Button
+                size="lg"
+                className="group w-full bg-accent hover:bg-accent/90 text-accent-foreground font-medium px-8 py-4 h-auto elegant-shadow smooth-transition"
+                onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+              >
+                Book a Consultation
+                <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 smooth-transition" />
+              </Button>
+            </MagneticButton>
 
-            <Button
-              variant="outline"
-              size="lg"
-              className="group border-white/30 bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 font-medium px-8 py-4 h-auto smooth-transition"
-              onClick={() => document.getElementById('portfolio')?.scrollIntoView({ behavior: 'smooth' })}
-            >
-              <Play className="w-5 h-5 mr-2 group-hover:scale-110 smooth-transition" />
-              Watch Reel
-            </Button>
+            <MagneticButton intensity={0.3}>
+              <Button
+                variant="outline"
+                size="lg"
+                className="group w-full border-white/30 bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 font-medium px-8 py-4 h-auto smooth-transition"
+                onClick={() => document.getElementById('portfolio')?.scrollIntoView({ behavior: 'smooth' })}
+              >
+                <Play className="w-5 h-5 mr-2 group-hover:scale-110 smooth-transition" />
+                Watch Reel
+              </Button>
+            </MagneticButton>
           </motion.div>
 
           {/* Stats */}

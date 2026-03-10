@@ -9,6 +9,7 @@ import {
   ArrowRight
 } from "lucide-react";
 import { motion } from "framer-motion";
+import TextReveal from "./ui/TextReveal";
 
 const services = [
   {
@@ -69,10 +70,10 @@ const Services = () => {
             <span className="text-sm font-medium text-accent">Our Services</span>
           </div>
 
-          <h2 className="text-4xl md:text-5xl font-serif font-bold text-foreground mb-6">
-            Capturing Life's
-            <span className="text-gradient block">Beautiful Moments</span>
-          </h2>
+          <TextReveal
+            text="Capturing Life's Beautiful Moments"
+            className="text-4xl md:text-5xl font-serif font-bold text-foreground mb-6"
+          />
 
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Each service is tailored to tell your unique story with

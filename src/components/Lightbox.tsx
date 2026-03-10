@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 
 interface Image {
     id: number;
@@ -51,7 +52,7 @@ const Lightbox = ({ images, initialIndex, onClose }: LightboxProps) => {
 
     const currentImage = images[currentIndex];
 
-    return (
+    return createPortal(
         <AnimatePresence>
             <motion.div
                 initial={{ opacity: 0 }}
@@ -122,7 +123,8 @@ const Lightbox = ({ images, initialIndex, onClose }: LightboxProps) => {
                     </motion.div>
                 </div>
             </motion.div>
-        </AnimatePresence>
+        </AnimatePresence>,
+        document.body
     );
 };
 

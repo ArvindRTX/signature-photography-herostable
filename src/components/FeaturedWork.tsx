@@ -3,6 +3,7 @@ import { Eye, Heart } from "lucide-react";
 import { useState, useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Lightbox from "./Lightbox";
+import TiltCard from "./ui/TiltCard";
 
 const featuredImages = [
   {
@@ -108,45 +109,48 @@ const FeaturedWork = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1, duration: 0.5 }}
-              className={`group relative overflow-hidden rounded-2xl cursor-pointer elegant-shadow break-inside-avoid w-full ${index % 3 === 0 ? 'aspect-[3/4]' : index % 3 === 1 ? 'aspect-[4/5]' : 'aspect-[4/3]'
-                }`}
-              onMouseEnter={() => setHoveredItem(item.id)}
-              onMouseLeave={() => setHoveredItem(null)}
-              onClick={() => setSelectedImageIndex(index)}
+              className={`break-inside-avoid w-full ${index % 3 === 0 ? 'aspect-[3/4]' : index % 3 === 1 ? 'aspect-[4/5]' : 'aspect-[4/3]'}`}
             >
-              <motion.img
-                src={item.image}
-                alt={item.title}
-                className="w-full h-full object-cover"
-                loading="lazy"
-                whileHover={{ scale: 1.1 }}
-                transition={{ duration: 0.6 }}
-              />
+              <TiltCard
+                className="group relative overflow-hidden rounded-2xl cursor-pointer elegant-shadow w-full h-full"
+                onMouseEnter={() => setHoveredItem(item.id)}
+                onMouseLeave={() => setHoveredItem(null)}
+                onClick={() => setSelectedImageIndex(index)}
+              >
+                <motion.img
+                  src={item.image}
+                  alt={item.title}
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                  whileHover={{ scale: 1.1 }}
+                  transition={{ duration: 0.6 }}
+                />
 
-              {/* Overlay */}
-              <div className={`absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent transition-opacity duration-500 ${hoveredItem === item.id ? 'opacity-100' : 'opacity-0'
-                }`}>
-                <div className="absolute bottom-0 left-0 right-0 p-6 flex flex-col justify-end h-full">
-                  <div className="translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                    <Badge className="mb-3 bg-accent/20 text-accent border-accent/30 backdrop-blur-md">
-                      {item.category}
-                    </Badge>
-                    <h3 className="text-white font-serif text-xl font-bold mb-2">
-                      {item.title}
-                    </h3>
-                    <div className="flex items-center gap-2 text-white/80">
-                      <Heart className="w-4 h-4" />
-                      <span className="text-sm">{item.likes} likes</span>
+                {/* Overlay */}
+                <div className={`absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent transition-opacity duration-500 ${hoveredItem === item.id ? 'opacity-100' : 'opacity-0'
+                  }`}>
+                  <div className="absolute bottom-0 left-0 right-0 p-6 flex flex-col justify-end h-full">
+                    <div className="translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                      <Badge className="mb-3 bg-accent/20 text-accent border-accent/30 backdrop-blur-md">
+                        {item.category}
+                      </Badge>
+                      <h3 className="text-white font-serif text-xl font-bold mb-2">
+                        {item.title}
+                      </h3>
+                      <div className="flex items-center gap-2 text-white/80">
+                        <Heart className="w-4 h-4" />
+                        <span className="text-sm">{item.likes} likes</span>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              {/* View Icon */}
-              <div className={`absolute top-4 right-4 w-10 h-10 bg-black/20 backdrop-blur-md rounded-full flex items-center justify-center transition-all duration-300 ${hoveredItem === item.id ? 'opacity-100 scale-100' : 'opacity-0 scale-50'
-                }`}>
-                <Eye className="w-5 h-5 text-white" />
-              </div>
+                {/* View Icon */}
+                <div className={`absolute top-4 right-4 w-10 h-10 bg-black/20 backdrop-blur-md rounded-full flex items-center justify-center transition-all duration-300 ${hoveredItem === item.id ? 'opacity-100 scale-100' : 'opacity-0 scale-50'
+                  }`}>
+                  <Eye className="w-5 h-5 text-white" />
+                </div>
+              </TiltCard>
             </motion.div>
           ))}
         </div>

@@ -2,6 +2,7 @@ import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Camera, Heart, Award } from "lucide-react";
 import AboutImage from '../assets/images/DSC02445.jpg';
+import TextReveal from "./ui/TextReveal";
 
 const About = () => {
     const containerRef = useRef<HTMLElement>(null);
@@ -74,9 +75,10 @@ const About = () => {
                                 <Camera className="w-4 h-4 text-accent" />
                                 <span className="text-sm font-medium text-accent">Behind the Lens</span>
                             </div>
-                            <h2 className="text-4xl md:text-5xl font-serif font-bold text-foreground mb-6 leading-tight">
-                                Capturing <span className="text-gradient">authentic moments</span> and timeless love stories
-                            </h2>
+                            <TextReveal
+                                text="Capturing authentic moments and timeless love stories"
+                                className="text-4xl md:text-5xl font-serif font-bold text-foreground mb-6 leading-tight"
+                            />
                         </div>
 
                         <div className="space-y-4 text-lg text-muted-foreground leading-relaxed">

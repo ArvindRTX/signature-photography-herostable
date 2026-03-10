@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ExternalLink, Menu, X } from "lucide-react";
-import { ThemeToggle } from "./ThemeToggle";
 import MagneticButton from "./ui/MagneticButton";
 
 const Navigation = () => {
@@ -54,9 +53,6 @@ const Navigation = () => {
 
           {/* Actions Container */}
           <div className="flex items-center gap-4 relative z-50">
-            {/* Theme Toggle Button (Desktop & Mobile) */}
-            <ThemeToggle />
-
             {/* Client Login Button (Desktop) */}
             <div className="hidden md:block flex-shrink-0">
               <MagneticButton>

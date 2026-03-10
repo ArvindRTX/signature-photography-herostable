@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import Navigation from "../components/Navigation";
 import Hero from "../components/Hero";
@@ -15,6 +16,15 @@ import CustomCursor from "../components/CustomCursor";
 import Preloader from "../components/Preloader";
 
 const Index = () => {
+  useEffect(() => {
+    // Prevent browser from trying to restore previous scroll position
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+    // Scroll to the very top on mount/refresh
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div className="min-h-screen bg-background relative overflow-hidden pointer-events-auto md:cursor-none">
       <Preloader />

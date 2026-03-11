@@ -18,10 +18,10 @@ const FloatingShapes = () => {
                 <motion.div
                     key={shape.id}
                     className={`absolute opacity-10 ${shape.type === "circle"
-                            ? "rounded-full bg-primary/20"
-                            : shape.type === "square"
-                                ? "rounded-lg bg-secondary/20"
-                                : "w-0 h-0 border-l-[50px] border-l-transparent border-r-[50px] border-r-transparent border-b-[100px] border-b-accent/20"
+                        ? "rounded-full bg-primary/20"
+                        : shape.type === "square"
+                            ? "rounded-lg bg-secondary/20"
+                            : "w-0 h-0 border-l-[50px] border-l-transparent border-r-[50px] border-r-transparent border-b-[100px] border-b-accent/20"
                         }`}
                     style={{
                         width: shape.type !== "triangle" ? shape.size : 0,

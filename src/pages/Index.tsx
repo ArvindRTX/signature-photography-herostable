@@ -14,6 +14,7 @@ import FloatingShapes from "../components/FloatingShapes";
 import FloatingPhoneButton from "../components/FloatingPhoneButton";
 import CustomCursor from "../components/CustomCursor";
 import Preloader from "../components/Preloader";
+import ScrollProgress from "../components/ScrollProgress";
 
 const Index = () => {
   useEffect(() => {
@@ -29,6 +30,7 @@ const Index = () => {
     <div className="min-h-screen bg-background relative overflow-hidden pointer-events-auto md:cursor-none">
       <Preloader />
       <CustomCursor />
+      <ScrollProgress />
       <Helmet>
         <title>Signature Photography | Wedding & Portrait Photographer</title>
         <meta name="description" content="Professional wedding and portrait photography capturing life's most precious moments with artistic vision and timeless elegance." />

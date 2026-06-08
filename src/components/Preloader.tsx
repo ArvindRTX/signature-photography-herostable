@@ -5,12 +5,29 @@ const Preloader = () => {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        // Ensure minimum preloader time to show off the animation.
-        const timer = setTimeout(() => {
-            setIsLoading(false);
-        }, 2200);
+        let timer: NodeJS.Timeout;
 
-        return () => clearTimeout(timer);
+        const handleLoad = () => {
+            // Give a short delay for the progress bar to finish filling up smoothly
+            timer = setTimeout(() => {
+                setIsLoading(false);
+            }, 600);
+        };
+
+        if (document.readyState === "complete") {
+            setIsLoading(false);
+        } else {
+            window.addEventListener("load", handleLoad);
+            // Fallback timeout to prevent stuck loading screen (e.g. if an external resource fails)
+            timer = setTimeout(() => {
+                setIsLoading(false);
+            }, 3000);
+        }
+
+        return () => {
+            window.removeEventListener("load", handleLoad);
+            clearTimeout(timer);
+        };
     }, []);
 
     return (

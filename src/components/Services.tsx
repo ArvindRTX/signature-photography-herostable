@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import {
   Heart,
   Users,
-  Baby,
+  Cake,
   Briefcase,
   Sparkles,
   ArrowRight
@@ -29,10 +29,10 @@ const services = [
     popular: false,
   },
   {
-    icon: Baby,
-    title: "Newborn Sessions",
-    description: "Gentle and safe photography for your precious little one",
-    features: ["Props included", "Parent shots", "Sibling photos", "Same week editing"],
+    icon: Cake,
+    title: "Birthdays & Parties",
+    description: "Capturing the joy, laughter, and celebratory details of your special events",
+    features: ["Candid & setup photos", "Cake cutting coverage", "Digital gallery link", "Customized themes"],
     price: "Enquire Now",
     popular: false,
   },
@@ -46,7 +46,11 @@ const services = [
   },
 ];
 
-const Services = () => {
+interface ServicesProps {
+  onEnquireClick: (serviceTitle: string) => void;
+}
+
+const Services = ({ onEnquireClick }: ServicesProps) => {
   return (
     <section id="services" className="py-24 bg-background/50 backdrop-blur-sm relative overflow-hidden">
       {/* Decorative elements */}
@@ -133,7 +137,7 @@ const Services = () => {
                     <div className="flex items-center justify-between">
                       <span
                         className="text-2xl font-bold text-accent cursor-pointer hover:text-accent/80 transition-colors"
-                        onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+                        onClick={() => onEnquireClick(service.title)}
                       >
                         {service.price}
                       </span>
@@ -160,7 +164,7 @@ const Services = () => {
           <motion.div
             whileHover={{ scale: 1.05 }}
             className="inline-flex items-center gap-2 text-accent font-medium hover:gap-4 smooth-transition cursor-pointer"
-            onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+            onClick={() => onEnquireClick("Custom Photography Session")}
           >
             <span>Let's discuss your vision</span>
             <ArrowRight className="w-5 h-5" />

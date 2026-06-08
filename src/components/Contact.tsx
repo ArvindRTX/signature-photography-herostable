@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -23,7 +23,7 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 const formSchema = z.object({
     name: z.string().min(2, "Name must be at least 2 characters"),
@@ -38,7 +38,20 @@ const formSchema = z.object({
     message: z.string().min(10, "Message must be at least 10 characters"),
 });
 
-const Contact = () => {
+const ADDON_OPTIONS = [
+    { id: "candidVideography", name: "Candid Videography", desc: "Natural and documentary-style video captures" },
+    { id: "insta360Video", name: "360° Video (Insta360)", desc: "Immersive 360-degree video coverage" },
+    { id: "droneVideo", name: "Drone Coverage", desc: "Cinematic aerial shots" },
+    { id: "album", name: "Fine-Art Photo Album", desc: "Premium printed memories" },
+    { id: "cinematicFilm", name: "Cinematic Video Highlight", desc: "3-5 minute highlight edit with audio" }
+];
+
+interface ContactProps {
+    prefilledService: string | null;
+    clearPrefill: () => void;
+}
+
+const Contact = ({ prefilledService, clearPrefill }: ContactProps) => {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -50,10 +63,50 @@ const Contact = () => {
     });
 
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [addons, setAddons] = useState({
+        candidVideography: false,
+        insta360Video: false,
+        droneVideo: false,
+        album: false,
+        cinematicFilm: false,
+    });
+
+    useEffect(() => {
+        if (prefilledService) {
+            let eventType = "other";
+            if (prefilledService.toLowerCase().includes("wedding")) {
+                eventType = "wedding";
+            } else if (
+                prefilledService.toLowerCase().includes("portrait")
+            ) {
+                eventType = "portrait";
+            } else if (
+                prefilledService.toLowerCase().includes("corporate") ||
+                prefilledService.toLowerCase().includes("event") ||
+                prefilledService.toLowerCase().includes("birthday") ||
+                prefilledService.toLowerCase().includes("party") ||
+                prefilledService.toLowerCase().includes("parties")
+            ) {
+                eventType = "event";
+            }
+            form.setValue("eventType", eventType);
+            form.setValue("message", `Hi! I would like to inquire about your "${prefilledService}" services. Please share more details and availability.`);
+            clearPrefill();
+        }
+    }, [prefilledService, form, clearPrefill]);
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         setIsSubmitting(true);
         try {
+            const activeAddons = Object.entries(addons)
+                .filter(([_, active]) => active)
+                .map(([id]) => {
+                    const found = ADDON_OPTIONS.find(o => o.id === id);
+                    return found ? found.name : id;
+                })
+                .join(", ");
+            const packageDetails = `Custom Timeline Request${activeAddons ? ` + Add-ons: ${activeAddons}` : ""}`;
+
             const formData = new FormData();
             formData.append("access_key", "a8f62ddb-b42d-40de-997a-9536fb0af107");
             formData.append("name", values.name);
@@ -61,9 +114,9 @@ const Contact = () => {
             formData.append("phone", values.phone);
             formData.append("eventType", values.eventType);
             formData.append("date", format(values.date, "PPP"));
-            formData.append("message", values.message);
+            formData.append("message", `${values.message}\n\n---\nPackage Selection:\n${packageDetails}`);
             // Optional: Send this to a specific subject
-            formData.append("subject", `New Booking Inquiry from ${values.name} (${values.eventType})`);
+            formData.append("subject", `New Booking Inquiry from ${values.name} (${values.eventType}) - Custom Request`);
 
             const response = await fetch("https://api.web3forms.com/submit", {
                 method: "POST",
@@ -225,6 +278,59 @@ const Contact = () => {
                                         </FormItem>
                                     )}
                                 />
+
+                                 {/* Optional Add-ons */}
+                                 <div className="space-y-6 bg-secondary/10 p-6 rounded-2xl border border-border/50">
+                                     <label className="text-base font-semibold text-foreground block">Optional Add-ons Interested In</label>
+                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                         {ADDON_OPTIONS.map((addon) => (
+                                             <label
+                                                 key={addon.id}
+                                                 className={cn(
+                                                     "flex items-start gap-3 p-4 rounded-xl border cursor-pointer transition-all",
+                                                     addons[addon.id as keyof typeof addons]
+                                                         ? "border-accent/50 bg-accent/5"
+                                                         : "border-border/50 bg-card hover:border-accent/20"
+                                                 )}
+                                             >
+                                                 <input
+                                                     type="checkbox"
+                                                     checked={addons[addon.id as keyof typeof addons]}
+                                                     onChange={(e) => setAddons({
+                                                         ...addons,
+                                                         [addon.id]: e.target.checked
+                                                     })}
+                                                     className="mt-1 accent-accent"
+                                                 />
+                                                 <div className="flex-1">
+                                                     <span className="text-sm font-semibold text-foreground">{addon.name}</span>
+                                                     <p className="text-xs text-muted-foreground mt-1">{addon.desc}</p>
+                                                 </div>
+                                             </label>
+                                         ))}
+                                     </div>
+                                 </div>
+
+                                 {/* Custom Selection Summary Badge */}
+                                 <div className="p-6 rounded-2xl bg-accent/5 border border-accent/20 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                                     <div className="flex-1">
+                                         <h4 className="font-bold font-serif text-lg text-foreground">Custom Quote Request</h4>
+                                         <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
+                                             {Object.values(addons).filter(Boolean).length > 0
+                                                 ? `Custom timeline request with additions: ${Object.entries(addons)
+                                                     .filter(([_, active]) => active)
+                                                     .map(([id]) => {
+                                                         const found = ADDON_OPTIONS.find(o => o.id === id);
+                                                         return found ? found.name : id;
+                                                     })
+                                                     .join(", ")}.`
+                                                 : "Custom timeline and services request."}
+                                         </p>
+                                    </div>
+                                    <div className="text-xs text-accent font-semibold uppercase tracking-wider bg-accent/10 border border-accent/20 px-4 py-2 rounded-xl text-center self-start sm:self-auto">
+                                        Quote To Be Provided
+                                    </div>
+                                </div>
 
                                 <FormField
                                     control={form.control}

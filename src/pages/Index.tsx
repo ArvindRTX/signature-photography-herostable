@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import Navigation from "../components/Navigation";
 import Hero from "../components/Hero";
@@ -12,11 +12,12 @@ import Contact from "../components/Contact";
 import Footer from "../components/Footer";
 import FloatingShapes from "../components/FloatingShapes";
 import FloatingPhoneButton from "../components/FloatingPhoneButton";
-import CustomCursor from "../components/CustomCursor";
 import Preloader from "../components/Preloader";
 import ScrollProgress from "../components/ScrollProgress";
 
 const Index = () => {
+  const [prefilledService, setPrefilledService] = useState<string | null>(null);
+
   useEffect(() => {
     // Prevent browser from trying to restore previous scroll position
     if ('scrollRestoration' in window.history) {
@@ -27,9 +28,8 @@ const Index = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background relative overflow-hidden pointer-events-auto md:cursor-none">
+    <div className="min-h-screen bg-background relative overflow-hidden pointer-events-auto">
       <Preloader />
-      <CustomCursor />
       <ScrollProgress />
       <Helmet>
         <title>Signature Photography | Wedding & Portrait Photographer</title>
@@ -82,12 +82,15 @@ const Index = () => {
       <Navigation />
       <Hero />
       <FeaturedWork />
-      <Services />
+      <Services onEnquireClick={(serviceTitle) => {
+        setPrefilledService(serviceTitle);
+        document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+      }} />
       <About />
       <Process />
       <Testimonials />
       <FAQ />
-      <Contact />
+      <Contact prefilledService={prefilledService} clearPrefill={() => setPrefilledService(null)} />
       <Footer />
       <FloatingPhoneButton />
     </div>

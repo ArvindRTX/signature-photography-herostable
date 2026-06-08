@@ -96,7 +96,18 @@ const Lightbox = ({ images, initialIndex, onClose }: LightboxProps) => {
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.95 }}
                             transition={{ duration: 0.2, ease: "easeOut" }}
-                            className="absolute inset-0 flex items-center justify-center p-4 md:p-8"
+                            drag="x"
+                            dragConstraints={{ left: 0, right: 0 }}
+                            dragElastic={0.6}
+                            onDragEnd={(e, { offset }) => {
+                                const swipeThreshold = 50;
+                                if (offset.x > swipeThreshold) {
+                                    setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+                                } else if (offset.x < -swipeThreshold) {
+                                    setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+                                }
+                            }}
+                            className="absolute inset-0 flex items-center justify-center p-4 md:p-8 cursor-grab active:cursor-grabbing touch-pan-y select-none"
                         >
                             <img
                                 src={currentImage.image}
